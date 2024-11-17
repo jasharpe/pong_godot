@@ -61,6 +61,7 @@ func _physics_process(delta: float) -> void:
 	var collision = jupiter.move_and_collide(delta * jupiter_speed * jupiter_direction)
 	if collision:
 		var collider = collision.get_collider()
+		print(collider)
 		if collider is EndZone:
 			if collider.side == EndZone.Player.LEFT:
 				score_right += 1
@@ -83,9 +84,9 @@ func _physics_process(delta: float) -> void:
 				perturb = normalized_offset * MAX_PERTURB_ANGLE
 			jupiter_direction = jupiter_direction.bounce(collision.get_normal())
 			jupiter_direction = jupiter_direction.rotated(perturb)
-			if collider == left_paddle:
+			if collider == left_paddle and (left_paddle.global_position - collision.get_position()).x < 0:
 				jupiter_direction = clamp_vector2_to_angle_range(jupiter_direction, -PI / 4, PI / 4)
-			if collider == right_paddle:
+			if collider == right_paddle and (right_paddle.global_position - collision.get_position()).x > 0:
 				jupiter_direction = clamp_vector2_to_angle_range(jupiter_direction, 3 * PI / 4, -3 * PI / 4)
 			_randomize_rotation()
 			if collider == left_paddle and next_speed_boost == left_paddle:
